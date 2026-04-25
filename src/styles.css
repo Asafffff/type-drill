@@ -1,8 +1,14 @@
 :root {
   color-scheme: dark;
-  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  background: #101216;
-  color: #e9edf1;
+  font-family: "Roboto Mono", "Cascadia Mono", "SFMono-Regular", Consolas, monospace;
+  background: #323437;
+  color: #d1d0c5;
+  --bg-color: #323437;
+  --main-color: #e2b714;
+  --sub-color: #646669;
+  --sub-alt-color: #2c2e31;
+  --text-color: #d1d0c5;
+  --error-color: #ca4754;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -16,9 +22,7 @@ body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
-  background:
-    linear-gradient(180deg, rgba(36, 42, 52, 0.72), rgba(16, 18, 22, 0) 28rem),
-    #101216;
+  background: var(--bg-color);
 }
 
 button {
@@ -29,19 +33,24 @@ button {
 }
 
 .app {
-  width: min(1120px, calc(100vw - 32px));
+  width: min(1180px, calc(100vw - 32px));
   min-height: 100vh;
   margin: 0 auto;
-  padding: 34px 0 42px;
+  padding: 32px 0 28px;
   display: grid;
-  grid-template-rows: auto auto 1fr auto;
-  gap: 28px;
+  grid-template-rows: auto auto minmax(430px, 1fr) auto;
+  gap: 18px;
   transition: gap 180ms ease;
 }
 
-.app.focusMode {
-  grid-template-rows: 0 0 1fr auto;
+.app.resultsMode {
+  grid-template-rows: auto 1fr auto;
   gap: 0;
+}
+
+.app.focusMode {
+  grid-template-rows: auto auto minmax(430px, 1fr) auto;
+  gap: 18px;
 }
 
 .topbar {
@@ -61,9 +70,9 @@ button {
 }
 
 .brand {
-  color: #f6c35f;
-  font-weight: 800;
-  font-size: 1.1rem;
+  color: var(--text-color);
+  font-weight: 400;
+  font-size: 1.75rem;
   letter-spacing: 0;
 }
 
@@ -76,25 +85,24 @@ button {
 }
 
 .segmented {
-  min-height: 38px;
-  padding: 4px;
+  min-height: 36px;
+  padding: 0 6px;
   display: flex;
   align-items: center;
-  gap: 4px;
-  background: #191d24;
-  border: 1px solid #2b313b;
-  border-radius: 8px;
+  gap: 6px;
+  background: var(--sub-alt-color);
+  border: 0;
+  border-radius: 6px;
 }
 
 .segmented button,
-.iconButton,
-.results button {
+.iconButton {
   min-width: 38px;
   min-height: 30px;
-  padding: 0 12px;
-  border-radius: 6px;
+  padding: 0 10px;
+  border-radius: 4px;
   background: transparent;
-  color: #8f99a8;
+  color: var(--sub-color);
   transition: background 140ms ease, color 140ms ease, transform 140ms ease;
 }
 
@@ -103,16 +111,13 @@ button {
 }
 
 .segmented button.active {
-  background: #f6c35f;
-  color: #111318;
-  font-weight: 800;
+  color: var(--main-color);
 }
 
 .segmented button:hover,
-.iconButton:hover,
-.results button:hover {
-  background: #262c36;
-  color: #e9edf1;
+.iconButton:hover {
+  background: transparent;
+  color: var(--text-color);
 }
 
 .iconButton {
@@ -120,16 +125,17 @@ button {
   height: 42px;
   display: inline-grid;
   place-items: center;
-  background: #191d24;
-  border: 1px solid #2b313b;
+  background: transparent;
+  border: 0;
   padding: 0;
 }
 
 .stats {
   display: flex;
-  gap: 24px;
-  color: #747f8f;
-  font-weight: 700;
+  justify-content: center;
+  gap: 22px;
+  color: var(--sub-color);
+  font-size: 0.78rem;
   overflow: hidden;
   transition: opacity 160ms ease, transform 180ms ease;
 }
@@ -141,17 +147,33 @@ button {
 }
 
 .stats span {
-  color: #e9edf1;
-  font-size: 1.35rem;
+  color: var(--main-color);
+  font-size: 0.95rem;
 }
 
 .typingPanel {
   align-self: center;
   position: relative;
-  min-height: 280px;
+  min-height: 360px;
   display: flex;
   align-items: center;
   isolation: isolate;
+}
+
+.focusWordCount {
+  position: absolute;
+  inset-inline: 0;
+  top: 24px;
+  color: var(--sub-color);
+  font-size: 0.8rem;
+  text-align: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 160ms ease;
+}
+
+.focusMode .focusWordCount {
+  opacity: 0.85;
 }
 
 .wordStream {
@@ -159,16 +181,15 @@ button {
   display: flex;
   flex-wrap: wrap;
   align-content: flex-start;
-  gap: 14px 18px;
-  font-size: clamp(1.85rem, 3.2vw, 2.7rem);
-  line-height: 1.45;
-  font-weight: 600;
-  color: #697486;
+  gap: 0.35em 0.6em;
+  font-size: clamp(1.85rem, 3vw, 2.35rem);
+  line-height: 1.5;
+  color: var(--sub-color);
 }
 
 .typingPanel.rtl .wordStream {
   justify-content: flex-start;
-  font-family: "Segoe UI", Arial, sans-serif;
+  font-family: Arial, "Rubik", "Noto Sans Hebrew", "Segoe UI", sans-serif;
 }
 
 .word {
@@ -178,20 +199,23 @@ button {
 }
 
 .word.current {
-  color: #8a95a5;
+  color: var(--sub-color);
+  --overflow-buffer: 10ch;
 }
 
 .correct {
-  color: #e9edf1;
+  color: var(--text-color);
 }
 
 .wrong,
 .overflow span {
-  color: #ff6f78;
+  color: var(--error-color);
 }
 
 .overflow {
   display: inline-flex;
+  margin-inline-end: calc(var(--overflow-buffer) * -1);
+  padding-inline-end: var(--overflow-buffer);
 }
 
 .caretTarget {
@@ -205,16 +229,16 @@ button {
   z-index: 2;
   left: 0;
   top: 0;
-  width: 5px;
-  background: #ffd36d;
-  border-radius: 999px;
+  width: 4px;
+  background: var(--main-color);
+  border-radius: 2px;
   pointer-events: none;
   transform-origin: center;
   transition:
     transform 90ms cubic-bezier(0.22, 1, 0.36, 1),
     height 90ms ease,
-    opacity 120ms ease,
-    background 120ms ease,
+    opacity 220ms ease,
+    background-color 220ms ease,
     width 120ms ease;
 }
 
@@ -224,9 +248,9 @@ button {
 }
 
 .smoothCaret.idle {
-  width: 5px;
-  background: #f6c35f;
-  animation: blink 1s steps(2, start) infinite;
+  width: 4px;
+  background: var(--main-color);
+  animation: caretIdlePulse 1.15s ease-in-out infinite;
 }
 
 .hiddenInput {
@@ -238,41 +262,240 @@ button {
   pointer-events: none;
 }
 
+.typingRestartButton {
+  position: absolute;
+  left: 50%;
+  bottom: 6px;
+  width: 52px;
+  height: 42px;
+  display: inline-grid;
+  place-items: center;
+  transform: translateX(-50%);
+  border-radius: 6px;
+  background: transparent;
+  color: var(--sub-color);
+  opacity: 0.58;
+  transition: color 140ms ease, opacity 140ms ease, box-shadow 140ms ease;
+}
+
+.typingRestartButton:hover,
+.typingRestartButton:focus-visible {
+  color: var(--text-color);
+  opacity: 1;
+}
+
+.typingRestartButton:focus-visible {
+  outline: 0;
+  box-shadow: 0 0 0 2px var(--text-color);
+}
+
 .results {
-  display: flex;
-  align-items: stretch;
-  gap: 12px;
-  flex-wrap: wrap;
-  padding-top: 6px;
+  align-self: center;
+  transform: translateY(18px);
+  display: grid;
+  grid-template-columns: 150px minmax(0, 1fr);
+  grid-template-areas:
+    "primary chart"
+    "primary more"
+    ". actions"
+    ". login"
+    ". shortcuts";
+  gap: 22px 34px;
   animation: resultsIn 180ms ease both;
 }
 
-.results div,
-.results button {
-  min-height: 62px;
-  padding: 10px 16px;
+.resultPrimaryStats {
+  grid-area: primary;
   display: grid;
   align-content: center;
+  gap: 18px;
+}
+
+.resultGraphPanel {
+  grid-area: chart;
+  min-width: 0;
+}
+
+.resultMoreStats {
+  grid-area: more;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(120px, 1fr));
+  gap: 26px;
+}
+
+.resultActions {
+  grid-area: actions;
+  display: flex;
+  justify-content: center;
+  gap: 34px;
+  padding-top: 8px;
+}
+
+.resultLoginHint {
+  grid-area: login;
+  justify-self: center;
+  color: var(--sub-color);
+  font-size: 0.86rem;
+}
+
+.resultShortcuts {
+  grid-area: shortcuts;
+  display: grid;
+  justify-content: center;
+  gap: 8px;
+  padding-top: 82px;
+  color: var(--sub-color);
+  font-size: 0.68rem;
+}
+
+.resultShortcuts div {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+kbd {
+  padding: 2px 7px;
+  border-radius: 4px;
+  background: var(--sub-color);
+  color: var(--bg-color);
+  font: inherit;
+  font-size: 0.64rem;
+}
+
+.resultMetric {
+  display: grid;
+  align-content: start;
   gap: 2px;
-  background: #191d24;
-  border: 1px solid #2b313b;
-  border-radius: 8px;
-  color: #7e8999;
-  font-weight: 800;
 }
 
-.results span {
-  color: #f6c35f;
-  font-size: 1.55rem;
+.resultMetric.large {
+  gap: 0;
 }
 
-.results button {
-  color: #e9edf1;
+.resultLabel {
+  color: var(--sub-color);
+  font-size: 1rem;
 }
 
-@keyframes blink {
-  50% {
-    opacity: 0;
+.resultMetric.large .resultLabel {
+  font-size: 1.35rem;
+}
+
+.resultValue {
+  color: var(--main-color);
+  font-size: 3.45rem;
+  line-height: 0.95;
+}
+
+.resultValue.small {
+  font-size: 1.7rem;
+  line-height: 1;
+}
+
+.resultSmallValue {
+  color: var(--main-color);
+  font-size: 0.92rem;
+  line-height: 1.25;
+}
+
+.resultSubValue {
+  color: var(--sub-color);
+  font-size: 0.68rem;
+  opacity: 0.7;
+}
+
+.resultActions button {
+  width: 28px;
+  height: 28px;
+  display: inline-grid;
+  place-items: center;
+  padding: 0;
+  border-radius: 4px;
+  background: transparent;
+  color: var(--sub-color);
+  transition: color 140ms ease, transform 140ms ease, box-shadow 140ms ease;
+}
+
+.resultActions button:hover,
+.resultActions button:focus-visible {
+  color: var(--text-color);
+}
+
+.resultActions button:focus-visible {
+  outline: 0;
+  box-shadow: 0 0 0 2px var(--text-color);
+}
+
+.resultChart {
+  width: 100%;
+  max-height: 260px;
+  overflow: visible;
+}
+
+.chartGrid line {
+  stroke: #292b2e;
+  stroke-width: 1;
+}
+
+.chartGrid text,
+.chartXTick,
+.chartAxisLabel {
+  fill: var(--sub-color);
+  font-size: 9px;
+  opacity: 0.7;
+  text-anchor: middle;
+}
+
+.chartGrid text {
+  text-anchor: end;
+}
+
+.chartAxisLabel {
+  font-size: 10px;
+}
+
+.chartWpmLine,
+.chartRawLine {
+  fill: none;
+  vector-effect: non-scaling-stroke;
+}
+
+.chartWpmLine {
+  stroke: var(--main-color);
+  stroke-width: 3;
+}
+
+.chartRawLine {
+  stroke: var(--main-color);
+  stroke-width: 2;
+  stroke-dasharray: 7 7;
+  opacity: 0.45;
+}
+
+.chartError {
+  fill: var(--error-color);
+  font-size: 14px;
+  font-weight: 700;
+  text-anchor: middle;
+}
+
+@keyframes caretIdlePulse {
+  0%,
+  100% {
+    opacity: 1;
+    background-color: var(--main-color);
+  }
+
+  45% {
+    opacity: 0.24;
+    background-color: #bca449;
+  }
+
+  62% {
+    opacity: 0.12;
+    background-color: var(--sub-color);
   }
 }
 
@@ -326,7 +549,42 @@ button {
   }
 
   .wordStream {
-    gap: 11px 14px;
+    gap: 0.35em 0.55em;
     font-size: 1.82rem;
+  }
+
+  .results {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "primary"
+      "chart"
+      "more"
+      "actions"
+      "login"
+      "shortcuts";
+    gap: 22px;
+    align-self: start;
+    transform: none;
+  }
+
+  .resultPrimaryStats,
+  .resultMoreStats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .resultValue {
+    font-size: 2.8rem;
+  }
+
+  .resultValue.small {
+    font-size: 1.35rem;
+  }
+
+  .resultActions {
+    gap: 22px;
+  }
+
+  .resultShortcuts {
+    padding-top: 32px;
   }
 }
