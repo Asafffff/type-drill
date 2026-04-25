@@ -130,8 +130,41 @@ function App() {
     }
   }, [currentInput, currentWordIndex, typedWords, words.length]);
 
+  const pinInputCursorToEnd = useCallback(() => {
+    const input = inputRef.current;
+    if (!input) return;
+
+    const end = input.value.length;
+    input.setSelectionRange(end, end);
+  }, []);
+
+  const scheduleInputCursorPin = useCallback(() => {
+    window.requestAnimationFrame(pinInputCursorToEnd);
+  }, [pinInputCursorToEnd]);
+
+  useLayoutEffect(() => {
+    pinInputCursorToEnd();
+  }, [currentInput, pinInputCursorToEnd]);
+
   const handleKeyDown = (event) => {
     const isTypingKey = event.key.length === 1 || event.key === 'Backspace' || event.key === ' ';
+    const isNavigationKey = [
+      'ArrowLeft',
+      'ArrowRight',
+      'ArrowUp',
+      'ArrowDown',
+      'Home',
+      'End',
+      'PageUp',
+      'PageDown'
+    ].includes(event.key);
+    const isSelectAll = (event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'a';
+
+    if (isNavigationKey || isSelectAll) {
+      event.preventDefault();
+      scheduleInputCursorPin();
+      return;
+    }
 
     if (isTypingKey) {
       setIsCaretIdle(false);
@@ -178,6 +211,14 @@ function App() {
     }
 
     const value = event.target.value.replace(/\s/g, '');
+    const isTailEdit = value.startsWith(currentInput) || currentInput.startsWith(value);
+
+    if (!isTailEdit) {
+      event.target.value = currentInput;
+      scheduleInputCursorPin();
+      return;
+    }
+
     if (!startTime && value.length > 0) {
       setStartTime(Date.now());
     }
@@ -284,6 +325,9 @@ function App() {
           value={currentInput}
           onChange={handleInput}
           onKeyDown={handleKeyDown}
+          onFocus={scheduleInputCursorPin}
+          onMouseUp={scheduleInputCursorPin}
+          onSelect={scheduleInputCursorPin}
           autoCapitalize="none"
           autoComplete="off"
           autoCorrect="off"
