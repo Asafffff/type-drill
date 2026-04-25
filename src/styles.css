@@ -190,6 +190,7 @@ button {
 .typingPanel.rtl .wordStream {
   justify-content: flex-start;
   font-family: Arial, "Rubik", "Noto Sans Hebrew", "Segoe UI", sans-serif;
+  transform: translateY(0.08em);
 }
 
 .word {
